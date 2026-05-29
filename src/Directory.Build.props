@@ -14,7 +14,6 @@
 
     <!-- NuGet packages -->
     <IsPackable>true</IsPackable>
-    <PackageIcon>opentelemetry-icon-color.png</PackageIcon>
     <PackageProjectUrl>https://opentelemetry.io</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -48,7 +47,6 @@
 
   <ItemGroup>
     <!-- NuGet -->
-    <None Include="$(MSBuildThisFileDirectory)\..\opentelemetry-icon-color.png" Pack="true" Visible="false" PackagePath="opentelemetry-icon-color.png" />
     <None Include="docs\README.md" Pack="true" PackagePath="docs\README.md" />
 
     <!-- reference assemblies let us target .NET Framework without the SDK (for example, on non-Windows) -->

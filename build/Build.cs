@@ -83,8 +83,7 @@ partial class Build : NukeBuild
 
     Target BuildWorkflow => _ => _
         .Description("Builds the project deliverables (except NuGet packages)")
-        .DependsOn(BuildTracer)
-        .DependsOn(CompileExamples);
+        .DependsOn(BuildTracer);
 
     Target BuildNativeWorkflow => _ => _
         .Description("Builds the native code project deliverables.")

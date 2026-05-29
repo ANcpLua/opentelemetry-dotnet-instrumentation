@@ -10,7 +10,6 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.Npm;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
@@ -272,18 +271,6 @@ partial class Build
         .Description("Compiles the native loader unit tests")
         .DependsOn(CompileNativeTestsWindows)
         .DependsOn(CompileNativeTestsLinux);
-
-    Target CompileExamples => _ => _
-        .Description("Compiles all the example projects")
-        .Executes(() =>
-        {
-            foreach (var exampleProject in Solution.GetAllProjects("Examples.*"))
-            {
-                DotNetBuild(s => s
-                    .SetProjectFile(exampleProject)
-                    .SetConfiguration(BuildConfiguration));
-            }
-        });
 
     Target PublishManagedProfiler => _ => _
         .Unlisted()
@@ -674,42 +661,6 @@ partial class Build
             File.Delete(ruleEngineJsonNugetFilePath);
             File.Copy(ruleEngineJsonFilePath, ruleEngineJsonNugetFilePath);
         });
-
-    Target InstallDocumentationTools => _ => _
-        .Description("Installs markdownlint-cli and cspell locally. npm is required")
-        .Executes(() =>
-        {
-            NpmTasks.NpmInstall();
-        });
-
-    Target MarkdownLint => _ => _
-        .Description("Executes MarkdownLint")
-        .After(InstallDocumentationTools)
-        .Executes(() =>
-        {
-            NpmTasks.NpmRun(s => s.SetCommand(@"markdownlint"));
-        });
-
-    Target MarkdownLintFix => _ => _
-        .Description("Trying to fix MarkdownLint issues")
-        .After(InstallDocumentationTools)
-        .Executes(() =>
-        {
-            NpmTasks.NpmRun(s => s.SetCommand(@"markdownlint-fix"));
-        });
-
-    Target SpellcheckDocumentation => _ => _
-        .Description("Executes MarkdownLint")
-        .After(InstallDocumentationTools)
-        .Executes(() =>
-        {
-            NpmTasks.NpmRun(s => s.SetCommand(@"cspell"));
-        });
-
-    Target ValidateDocumentation => _ => _
-        .Description("Executes validation tools for documentation")
-        .DependsOn(MarkdownLint)
-        .DependsOn(SpellcheckDocumentation);
 
     private AbsolutePath GetResultsDirectory(Project proj) => TestArtifactsDirectory / "results" / proj.Name;
 
